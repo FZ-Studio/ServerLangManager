@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+archivesBaseName = 'ServerLangManager'
+version = '1.0-SNAPSHOT'
+group = 'xyz.fcidd'
+
+repositories {
+    mavenCentral()
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("SLM.json") {
+		expand "version": project.version
+	}
+}
+
+dependencies {
+  	implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+ 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+tasks.withType(JavaCompile) {  
+    options.encoding = "UTF-8"  
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
