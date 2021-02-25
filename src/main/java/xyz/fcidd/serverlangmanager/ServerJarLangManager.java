@@ -3,6 +3,7 @@ package xyz.fcidd.serverlangmanager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -31,14 +32,14 @@ public class ServerJarLangManager extends ServerLangManager {
         }
         Gson gson = new Gson();
         InputStream in = this.getClass().getResourceAsStream(langFileInJar);
-        Scanner scanner = new Scanner(in, "UTF-8");
+        Scanner scanner = new Scanner(in, StandardCharsets.UTF_8);
         String json = scanner.useDelimiter("\\A").next();
         scanner.close();
         currentLangMap = gson.fromJson(json, new TypeToken<HashMap<String, String>>() {
         }.getType());
 
         // 从jar中加载语言文件
-        langsList = new ArrayList<>();
+        langList = new ArrayList<>();
         String langPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             langPath = langPath.substring(1, langPath.length());
@@ -51,7 +52,7 @@ public class ServerJarLangManager extends ServerLangManager {
                 if (langFileString.startsWith(langFileInJar.substring(1, langFileInJar.lastIndexOf("/")))
                         && langFileString.endsWith(".json")) {
                     // 获取语言id
-                    langsList.add(langFileString.substring(langFileString.lastIndexOf("/") + 1,
+                    langList.add(langFileString.substring(langFileString.lastIndexOf("/") + 1,
                             langFileString.lastIndexOf(".")));
                 }
             }

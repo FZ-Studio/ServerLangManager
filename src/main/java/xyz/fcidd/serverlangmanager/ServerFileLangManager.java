@@ -3,7 +3,7 @@ package xyz.fcidd.serverlangmanager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -24,19 +24,13 @@ public class ServerFileLangManager extends ServerLangManager {
         }
         Gson gson = new Gson();
         FileInputStream in = new FileInputStream(langFile);
-        Scanner scanner = new Scanner(in, "UTF-8");
+        Scanner scanner = new Scanner(in, StandardCharsets.UTF_8);
         String json = scanner.useDelimiter("\\A").next();
         scanner.close();
         currentLangMap = gson.fromJson(json, new TypeToken<HashMap<String, String>>() {
         }.getType());
 
         // 从文件中加载语言文件
-        langsList = new ArrayList<>();
-        File langPath = langFile.getParentFile();
-        File[] langFiles = langPath.listFiles();
-        for (File file : langFiles) {
-            String fileName = file.getName();
-            langsList.add(fileName.substring(0, fileName.lastIndexOf(".")));
-        }
+        langList = getLangListFromPath(langFile.getParentFile());
     }
 }

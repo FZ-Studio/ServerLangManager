@@ -1,12 +1,14 @@
 package xyz.fcidd.serverlangmanager;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ServerLangManager {
 
-    protected List<String> langsList;
+    protected List<String> langList;
     protected HashMap<String, String> currentLangMap;
 
     protected ServerLangManager(){
@@ -39,7 +41,17 @@ public class ServerLangManager {
      * 
      * @return 当前目录下的所有语言文件的无后缀文件名列表(当前目录下的所有语言ID)
      */
-    public List<String> getLangsList() {
-        return langsList;
+    public List<String> getLangList() {
+        return langList;
+    }
+
+    public static List<String> getLangListFromPath(File path) {
+        List<String> langList = new ArrayList<>();
+        File[] langFiles = path.listFiles();
+        for (File file : langFiles) {
+            String fileName = file.getName();
+            langList.add(fileName.substring(0, fileName.lastIndexOf(".")));
+        }
+        return langList;
     }
 }
