@@ -37,11 +37,15 @@ public class ServerJarLangManager extends ServerLangManager {
         scanner.close();
         currentLangMap = gson.fromJson(json, new TypeToken<HashMap<String, String>>() {
         }.getType());
+        if (currentLangMap.isEmpty()) {
+            throw new IllegalArgumentException("invalid lang file!");
+        }
 
-        // 从jar中加载语言文件
+        //从jar中加载语言文件
         langList = new ArrayList<>();
         String langPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        System.out.println(langPath);
+        if (langPath.startsWith("/")) {
             langPath = langPath.substring(1, langPath.length());
         }
         langPath = URLDecoder.decode(langPath, "UTF-8");
